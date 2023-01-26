@@ -11,14 +11,13 @@
 </head>
 
 <body>
-	<div class="container col-xl-10 col-xxl-8 px-4 py-5">
+	<div class="container col-xl-10 col-xxl-8 px-4 py-5 border-bottom">
 		<div class="row align-items-center g-lg-5 py-5">
 			<div class="col-lg-7 text-center text-lg-start">
 				<h1 class="display-4 fw-bold lh-1 mb-3">RNG - Random Number Generator</h1>
 				<p class="col-lg-10 fs-4">Um gerador de números aleatórios para ser usado em diversos tipos de sorteios
-					de loteria no Brasil<br />
-					você pode utilizá-lo nas seguintes loterias: Mega Sena, Milionária, Quina, Lotofácil, entre
-					outras...</p>
+					de loteria no Brasil. Você pode utilizá-lo nas seguintes loterias: Mega Sena, Milionária, Quina,
+					Lotofácil, Dupla Sena, Dia de Sorte, Lotomania</p>
 			</div>
 			<div class="col-md-10 mx-auto col-lg-5">
 				<form class="p-4 p-md-5 border rounded-3 bg-light">
@@ -50,6 +49,143 @@
 			</div>
 		</div>
 	</div>
+
+	<div class="container py-3">
+		<header>
+			<div class="p-3 pb-md-4 mx-auto text-center">
+				<h1 class="display-4 fw-normal">Resultado</h1>
+				<p class="fs-5 text-muted">Lembre-se! O que estamos exibindo nada mais é que uma sugestão de combinação baseando-se nos número que você inseriu. Não significa que os números indicado serão sorteados. Mesmo porque a probabilidade de acerto é de 1 em dezena de milhões, mas quem sabe né?!</p>
+			</div>
+		</header>
+
+		<main>
+			<div id="results" class="row mb-3 text-center"></div>
+			<h2 class="display-6 text-center mb-4">Compare plans</h2>
+
+			<div class="table-responsive">
+				<table class="table text-center">
+					<thead>
+						<tr>
+							<th style="width: 34%;"></th>
+							<th style="width: 22%;">Free</th>
+							<th style="width: 22%;">Pro</th>
+							<th style="width: 22%;">Enterprise</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<th scope="row" class="text-start">Public</th>
+							<td><svg class="bi" width="24" height="24">
+									<use xlink:href="#check"></use>
+								</svg></td>
+							<td><svg class="bi" width="24" height="24">
+									<use xlink:href="#check"></use>
+								</svg></td>
+							<td><svg class="bi" width="24" height="24">
+									<use xlink:href="#check"></use>
+								</svg></td>
+						</tr>
+						<tr>
+							<th scope="row" class="text-start">Private</th>
+							<td></td>
+							<td><svg class="bi" width="24" height="24">
+									<use xlink:href="#check"></use>
+								</svg></td>
+							<td><svg class="bi" width="24" height="24">
+									<use xlink:href="#check"></use>
+								</svg></td>
+						</tr>
+					</tbody>
+
+					<tbody>
+						<tr>
+							<th scope="row" class="text-start">Permissions</th>
+							<td><svg class="bi" width="24" height="24">
+									<use xlink:href="#check"></use>
+								</svg></td>
+							<td><svg class="bi" width="24" height="24">
+									<use xlink:href="#check"></use>
+								</svg></td>
+							<td><svg class="bi" width="24" height="24">
+									<use xlink:href="#check"></use>
+								</svg></td>
+						</tr>
+						<tr>
+							<th scope="row" class="text-start">Sharing</th>
+							<td></td>
+							<td><svg class="bi" width="24" height="24">
+									<use xlink:href="#check"></use>
+								</svg></td>
+							<td><svg class="bi" width="24" height="24">
+									<use xlink:href="#check"></use>
+								</svg></td>
+						</tr>
+						<tr>
+							<th scope="row" class="text-start">Unlimited members</th>
+							<td></td>
+							<td><svg class="bi" width="24" height="24">
+									<use xlink:href="#check"></use>
+								</svg></td>
+							<td><svg class="bi" width="24" height="24">
+									<use xlink:href="#check"></use>
+								</svg></td>
+						</tr>
+						<tr>
+							<th scope="row" class="text-start">Extra security</th>
+							<td></td>
+							<td></td>
+							<td><svg class="bi" width="24" height="24">
+									<use xlink:href="#check"></use>
+								</svg></td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+		</main>
+
+		<footer class="pt-4 my-md-5 pt-md-5 border-top">
+			<div class="row">
+				<div class="col-12 col-md">
+					<img class="mb-2" src="/docs/5.3/assets/brand/bootstrap-logo.svg" alt="" width="24" height="19">
+					<small class="d-block mb-3 text-muted">© 2017–2022</small>
+				</div>
+				<div class="col-6 col-md">
+					<h5>Features</h5>
+					<ul class="list-unstyled text-small">
+						<li class="mb-1"><a class="link-secondary text-decoration-none" href="#">Cool stuff</a></li>
+						<li class="mb-1"><a class="link-secondary text-decoration-none" href="#">Random feature</a></li>
+						<li class="mb-1"><a class="link-secondary text-decoration-none" href="#">Team feature</a></li>
+						<li class="mb-1"><a class="link-secondary text-decoration-none" href="#">Stuff for
+								developers</a></li>
+						<li class="mb-1"><a class="link-secondary text-decoration-none" href="#">Another one</a></li>
+						<li class="mb-1"><a class="link-secondary text-decoration-none" href="#">Last time</a></li>
+					</ul>
+				</div>
+				<div class="col-6 col-md">
+					<h5>Resources</h5>
+					<ul class="list-unstyled text-small">
+						<li class="mb-1"><a class="link-secondary text-decoration-none" href="#">Resource</a></li>
+						<li class="mb-1"><a class="link-secondary text-decoration-none" href="#">Resource name</a></li>
+						<li class="mb-1"><a class="link-secondary text-decoration-none" href="#">Another resource</a>
+						</li>
+						<li class="mb-1"><a class="link-secondary text-decoration-none" href="#">Final resource</a></li>
+					</ul>
+				</div>
+				<div class="col-6 col-md">
+					<h5>About</h5>
+					<ul class="list-unstyled text-small">
+						<li class="mb-1"><a class="link-secondary text-decoration-none" href="#">Team</a></li>
+						<li class="mb-1"><a class="link-secondary text-decoration-none" href="#">Locations</a></li>
+						<li class="mb-1"><a class="link-secondary text-decoration-none" href="#">Privacy</a></li>
+						<li class="mb-1"><a class="link-secondary text-decoration-none" href="#">Terms</a></li>
+					</ul>
+				</div>
+			</div>
+		</footer>
+	</div>
+
+
+
 	<!-- Modal -->
 	<div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
 		aria-labelledby="staticBackdropLabel" aria-hidden="true">

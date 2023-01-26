@@ -46,20 +46,28 @@ const	getRandomNumber = (mainArray) => {
 	return (mainArray[generateRandomIndex(mainArray)]);
 }
 
+/**
+ * @brief a selection sort algorithm to sort each game
+ * @param {*} disorderlyArray a single game array
+ * @returns a sorted array
+ */
 const	selectionSort = (disorderlyArray) => {
 	let	aux;
+	let	i;
 
-	for (let i = 0; i < disorderlyArray.length; i++) {
-		for (let j = 0; j < disorderlyArray.length; j++) {
-			if (disorderlyArray[i] > disorderlyArray[j + 1]) {
+	i = 0;
+	while (i < disorderlyArray.length - 1) {
+		for (let j = i + 1; j < disorderlyArray.length; j++) {
+			if (disorderlyArray[i] > disorderlyArray[j]) {
 				aux = disorderlyArray[i];
-				disorderlyArray[i] = disorderlyArray[j + 1];
-				disorderlyArray[j + 1] = aux;
+				disorderlyArray[i] = disorderlyArray[j];
+				disorderlyArray[j] = aux;
 			}
 		}
-		orderlyArray = disorderlyArray;
+		i++;
 	}
-	return (orderlyArray);
+	
+	return (disorderlyArray);
 }
 
 /**
@@ -96,12 +104,27 @@ const	generateGame = (mainArray, qttGames, sizeGame) => {
  * @brief print a result in console
  * @param {*} games array with random games
  */
-const	printGames = (games) => {
+const	printGames = (games, rawArray) => {
 	let	i;
+	let	template = [];
 
 	i = 0;
 	while (i < games.length) {
 		console.log(`${i + 1}º Jogo: ${games[i]}\n`);
+		template[i] = `
+			<div class="col">
+				<div class="card mb-4 rounded-3 shadow-sm">
+					<div class="card-header py-3">
+						<h4 class="my-0 fw-normal">Jogo ${i + 1}</h4>
+					</div>
+					<div class="card-body">
+						<h1 class="card-title pricing-card-title">${games[i]}</h1>
+						<p>Resultado gerado a partir dos valores: ${rawArray}</p>
+					</div>
+				</div>
+			</div>
+		`;
+		document.getElementById("results").innerHTML = template;
 		i++;
 	}
 }
@@ -130,7 +153,8 @@ const	converterRawToArray = (raw) => {
 const	main = (rawArray, quantityGames, numberPerGame) => {
 	mainArray = converterRawToArray(rawArray);
 	const games = generateGame(mainArray, quantityGames, numberPerGame);
-	printGames(games);
+	localStorage.setItem("games", games);
+	printGames(games, rawArray);
 }
 
 /**
@@ -155,12 +179,14 @@ const	getLocalStorageValues = () => {
 	numberPerGame = localStorage.getItem("numberPerGame");
 	quantityGames = localStorage.getItem("quantityGames");
 	remember = localStorage.getItem("remember");
+	games = localStorage.getItem("games");
 	if (rawArray && numberPerGame && quantityGames) {
 		document.getElementById("iptNumbers").value = rawArray;
 		document.getElementById("iptGameQtt").value = quantityGames;
 		document.getElementById("iptNumberQtt").value = numberPerGame;
 		document.getElementById("chkRemember").value = remember;
 	}
+	printGames(games, rawArray);
 }
 
 /**
@@ -174,6 +200,7 @@ const	setLocalStorageValues = (formValues) => {
 		localStorage.setItem("numberPerGame", formValues.numberPerGame);
 		localStorage.setItem("quantityGames", formValues.quantityGames);
 		localStorage.setItem("remember", formValues.remember);
+		localStorage.setItem("games", games);
 	} else {
 		localStorage.clear();
 	}
@@ -211,8 +238,8 @@ const	formValidator = (formValues, modal) => {
 		modal.message = `Por favor entre com os números que você deseja que seja sorteados, pode haver repetição de números, exemplo: 31, 5, 6, 60, 5, ...`
 		openModal(modal);
 	} else {
-		setLocalStorageValues(formValues);
 		main(formValues.rawArray, formValues.quantityGames, formValues.numberPerGame);
+		setLocalStorageValues(formValues);
 	}
 }
 
