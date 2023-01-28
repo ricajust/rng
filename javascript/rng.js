@@ -10,7 +10,7 @@
   por ricajust                     ⠀⠀⠀⠀⠀⢀⢎⠁⡌⢰⠁⠀⠀⠀⠀⠀⠀⠀⢸⠀⡛⠀⡷⡀⠀⠀⠀⠀⠀⠀        
                                    ⠀⠀⠀⠀⣀⣾⣷⣠⠃⢸⠀⠀⠀⠀⠀⠀⠀⠀⣸⠀⢹⢰⠁⢳⠀⠀⠀⠀⠀⠀       
                                    ⠀⠀⠀⠀⢸⡿⠟⢿⢳⡏⠀⠀⠀⠀⠀⠀⠀⢠⡟⣶⣘⢞⡀⠘⡆             
-  Updated: 2023/01/25 19:25:44     ⠀⠀⠀⠀⡼⢺⣯⢹⢰⡏⠒⠒⠒⠊⠀⠐⢒⣾⣹⣸⢹⣾⡇⠀⢣            
+  Updated: 2023/01/26 10:06:33     ⠀⠀⠀⠀⡼⢺⣯⢹⢰⡏⠒⠒⠒⠊⠀⠐⢒⣾⣹⣸⢹⣾⡇⠀⢣            
   por ricajus                      ⠀⠀⠀⠀⣏⣾⠃⠀⣼⡟⣢⣀⡠⠤⣀⡰⢋⡝⣱⣹⠇⣿⣧⣴⠸⡄          
                                    ⠀⠀⠀⠀⡏⡞⡆⢠⡇⣟⠭⡒⠭⠭⠤⠒⣡⠔⣽⡇⣂⣿⠟⠃⢀⡇          
                                    ⠀⠀⠀⠀⢧⡇⡧⢫⠃⣷⣽⣒⣍⣉⣈⡩⢴⠾⡳⢡⢸⣛⣪⡗⢴⠁          
@@ -22,28 +22,43 @@
                                                                                 
 ********************************************************************************/
 
+/**
+ * @brief find a number in selected context
+ * @param {*} context a context to search
+ * @param {*} number a number to find
+ * @returns boolean (true if find number, otherwise false)
+ */
+const	findNumber = (context, number) => {
+	for (let i = 0; i < context.length; i++) {
+		if (context[i] == number)
+			return (true);
+	}
+	return (false);
+}
 
 /**
  * @brief function that return any number from array size range
  * @param {*} mainArray array of numbers
  * @returns 
  */
-const	generateRandomIndex = (mainArray) => {
-	let	index;
+const	getRandomNumber = (mainArray) => {
+	let	selectedNumber;
+	let	storageNumbers = [];
 	let	size;
+	let	index;
 
 	size = mainArray.length;
-	index = Math.floor(Math.random() * size);
-	return (index);
-}
-
-/**
- * @brief get a random number from main array
- * @param {*} mainArray array of numbers
- * @returns number
- */
-const	getRandomNumber = (mainArray) => {
-	return (mainArray[generateRandomIndex(mainArray)]);
+	storageNumbers = JSON.parse(localStorage.getItem("storageNumbers")) ? JSON.parse(localStorage.getItem("storageNumbers")) : [];
+	do {
+		if (size > 1) 
+			index = Math.floor(Math.random() * size);
+		else
+			index = 0;
+		selectedNumber = mainArray[index];
+	} while (storageNumbers && selectedNumber && findNumber(storageNumbers, selectedNumber));
+	storageNumbers.push(selectedNumber);
+	localStorage.setItem("storageNumbers", JSON.stringify(storageNumbers));
+	return (selectedNumber);
 }
 
 /**
@@ -70,6 +85,15 @@ const	selectionSort = (disorderlyArray) => {
 	return (disorderlyArray);
 }
 
+const	removeNumberFromArray = (arr, number) => {
+	for (let i = 0; i < arr.length; i++) {
+		if (arr[i] == number) {
+			arr.splice(i, 1);
+		}
+	}
+	return arr;
+}
+
 /**
  * @brief create N games with X size
  * @param {*} mainArray array with numbers (choise user)
@@ -79,42 +103,48 @@ const	selectionSort = (disorderlyArray) => {
  */
 const	generateGame = (mainArray, qttGames, sizeGame) => {
 	let	games = [];
+	let	copyArray = [];
 	let	number;
-	
+
 	if (!mainArray || !qttGames || !sizeGame) {
-		modal.title = "Ocorreu um problema interno";
-		modal.message = `Por favor entre em contato com o administrador do sistema e informe o código 500.`
-		openModal(modal);
+		handleErrors(
+			"Ocorreu um problema interno",
+			"Por favor entre em contato com o administrador do sistema e informe o código 500."
+		)
 	}
 	for (let i = 0; i < qttGames; i++) {
+		copyArray = structuredClone(mainArray);
 		let	game = [];
 		for (let j = 0; j < sizeGame; j++) {
-			number = getRandomNumber(mainArray);
+			number = getRandomNumber(copyArray);
 			while (game.indexOf(number) >= 0)
-				number = getRandomNumber(mainArray);
+				number = getRandomNumber(copyArray);
 			game.push(number);
+			copyArray = removeNumberFromArray(copyArray, number);
 		}
 		game = selectionSort(game);
 		games[i] = game;
 	}
+	localStorage.setItem("storageNumbers", null);
 	return (games);
 }
 
 /**
- * @brief print a result in console
+ * @brief print a result in screen and console
  * @param {*} games array with random games
+ * @param {*} rawArray string with numbers
  */
 const	printGames = (games, rawArray) => {
 	let	i;
-	let	template = [];
+	let	templates = "";
 
 	i = 0;
 	while (i < games.length) {
 		console.log(`${i + 1}º Jogo: ${games[i]}\n`);
-		template[i] = `
+		let template = `
 			<div class="col">
 				<div class="card mb-4 rounded-3 shadow-sm">
-					<div class="card-header py-3">
+					<div class="card-header py-3 text-bg-primary border-primary">
 						<h4 class="my-0 fw-normal">Jogo ${i + 1}</h4>
 					</div>
 					<div class="card-body">
@@ -124,9 +154,10 @@ const	printGames = (games, rawArray) => {
 				</div>
 			</div>
 		`;
-		document.getElementById("results").innerHTML = template;
+		templates += template
 		i++;
 	}
+	document.getElementById("results").innerHTML = templates;
 }
 
 /**
@@ -144,6 +175,12 @@ const	converterRawToArray = (raw) => {
 	return mainArrayNumber;
 }
 
+const	removeDuplicity = (oldArray) => {
+	return oldArray.filter((item, index) => {
+		oldArray.indexOf(item) === index;
+	});
+}
+
 /**
  * @brief the main function
  * @param {*} rawArray string with numbers
@@ -151,10 +188,31 @@ const	converterRawToArray = (raw) => {
  * @param {*} numberPerGame quantity of numbers for a game
  */
 const	main = (rawArray, quantityGames, numberPerGame) => {
+	let newArray = [];
 	mainArray = converterRawToArray(rawArray);
-	const games = generateGame(mainArray, quantityGames, numberPerGame);
-	localStorage.setItem("games", games);
-	printGames(games, rawArray);
+	newArray = mainArray.filter((item, index) => {
+			return mainArray.indexOf(item) === index;
+		});
+	if (numberPerGame == newArray.length) {
+		handleErrors(
+			"Opa, detectamos uma discrepância",
+			`Detectamos que há duplicidade nos números digitados, com isso eliminamos os números em duplicidade e os números que restaram são estes:\n${newArray}.`
+		);
+		numberPerGame = newArray.length;
+	}
+	if (numberPerGame > newArray.length) {
+		handleErrors(
+			"Opa, dados de entrada inválidos!",
+			"A quantidade de números por jogo que você inseriu (sem contar os números repetidos) é maior que a quantidade total dos números para sorteio inseridos, por favor tente novamente"
+		);
+		return false;
+	} else {
+		localStorage.setItem("storageIndexes", null);
+		const games = generateGame(newArray, quantityGames, numberPerGame);
+		localStorage.setItem("games", games);
+		printGames(games, rawArray);
+		return true;
+	}
 }
 
 /**
@@ -186,7 +244,7 @@ const	getLocalStorageValues = () => {
 		document.getElementById("iptNumberQtt").value = numberPerGame;
 		document.getElementById("chkRemember").value = remember;
 	}
-	printGames(games, rawArray);
+	//printGames(games, rawArray);
 }
 
 /**
@@ -207,6 +265,19 @@ const	setLocalStorageValues = (formValues) => {
 }
 
 /**
+ * @brief a error orchestrator 
+ * @param {*} title modal title
+ * @param {*} message modal message
+ */
+const	handleErrors = (title, message) => {
+	const modalData = {};
+
+	modalData.title = title;
+	modalData.message = message;
+	openModal(modalData);
+}
+
+/**
  * @brief function to open bootstrap modal with corresponding messages
  * @param {*} modal warning messages
  * @returns 
@@ -224,22 +295,31 @@ const	openModal = (modal) => {
  * @param {*} formValues form values
  * @param {*} modal warning messages
  */
-const	formValidator = (formValues, modal) => {
+const	formValidator = (formValues) => {
+	let statusMain;
+
 	if (!formValues.quantityGames) {
-		modal.title = "Quantidade de jogos inválida";
-		modal.message = `Por favor entre com a quantidade de jogos!\nPor exemplo, uma cartela da Mega Sena tem três jogos cada um com seis jogos como padrão (podendo ser mais números)`
-		openModal(modal);
+		handleErrors(
+			"Quantidade de jogos inválida",
+			"Por favor entre com a quantidade de jogos!\nPor exemplo, uma cartela da Mega Sena tem três jogos cada um com seis jogos como padrão (podendo ser mais números)"
+		);
 	} else if (!formValues.numberPerGame) {
-		modal.title = "Quantidade de números por jogos inválida";
-		modal.message = `Por favor entre com a quantidade de números que você quer por jogo!\nPor padrão a Mega Sena tem seis jogos, mas você pode escolher mais ou menos números)`
-		openModal(modal);
+		handleErrors(
+			"Quantidade de números por jogos inválida",
+			"Por favor entre com a quantidade de números que você quer por jogo!\nPor padrão a Mega Sena tem seis jogos, mas você pode escolher mais ou menos números)"
+		);
 	} else if (!formValues.rawArray) {
-		modal.title = "Números para sorteio inválido";
-		modal.message = `Por favor entre com os números que você deseja que seja sorteados, pode haver repetição de números, exemplo: 31, 5, 6, 60, 5, ...`
-		openModal(modal);
+		handleErrors(
+			"Números para sorteio inválido",
+			"Por favor entre com os números que você deseja que seja sorteados, pode haver repetição de números, exemplo: 31, 5, 6, 60, 5, ..."
+		);
 	} else {
-		main(formValues.rawArray, formValues.quantityGames, formValues.numberPerGame);
 		setLocalStorageValues(formValues);
+		statusMain = main(formValues.rawArray, formValues.quantityGames, formValues.numberPerGame);
+		if (statusMain) {
+			document.getElementById("containerResult").style.setProperty("display", "flex");
+			document.getElementById("containerResult").style.setProperty("flex-direction", "column");
+		}
 	}
 }
 
@@ -248,13 +328,9 @@ const	formValidator = (formValues, modal) => {
 */
 document.querySelector("#btnGenerateGame").addEventListener("click", () => {
 	let formValues = {};
-	const modal = {
-		show: false,
-		message: ""
-	};
-	
+
 	formValues = getFormValues();
-	formValidator(formValues, modal);
+	formValidator(formValues);
 });
 
 getLocalStorageValues();
