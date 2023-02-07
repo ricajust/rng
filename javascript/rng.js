@@ -124,8 +124,8 @@ const	generateGame = (mainArray, qttGames, sizeGame) => {
 		}
 		game = selectionSort(game);
 		games[i] = game;
+		localStorage.setItem("storageNumbers", null);
 	}
-	localStorage.setItem("storageNumbers", null);
 	return (games);
 }
 
